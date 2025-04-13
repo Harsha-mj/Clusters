@@ -1,6 +1,7 @@
 # File: modules/clustering.py
 from sklearn.cluster import KMeans
 import numpy as np
+import logging
 
 def get_elbow_values(data, max_k=10):
     try:
