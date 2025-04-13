@@ -1,51 +1,38 @@
-# File: app.py
 import streamlit as st
-import logging
-import pandas as pd
-from data_cleaning import clean_data
-from clustering import get_elbow_values, apply_kmeans
-from visualization import plot_elbow, plot_clusters
+import joblib
+import numpy as np
 
-logging.basicConfig(level=logging.INFO)
+# Use Streamlit's default logger
+logger = st.logger if hasattr(st, "logger") else st
 
-st.title("Mall Customer Clustering App")
+# Load the model
+model_path = "kmeans_model.pkl"
+try:
+    model = joblib.load(model_path)
+    logger.info("Model loaded successfully from %s", model_path)
+except Exception as e:
+    logger.error("Error loading model: %s", e)
+    st.error("Failed to load the model.")
+    st.stop()
 
-st.markdown("Enter Customer Features (Age, Annual Income and Spending Score)")
+# Streamlit UI
+st.title("🛍️ Mall Customer Segment Predictor")
+st.markdown("""
+Enter your details to find out which customer segment you belong to based on clustering!
+""")
 
-with st.form("input_form"):
-    age_list = st.text_area("Enter Age values, separated by commas")
-    income_list = st.text_area("Enter Annual Income (k$) values, separated by commas")
-    score_list = st.text_area("Enter Spending Score (1-100) values, separated by commas")
-    submitted = st.form_submit_button("Run Clustering")
+# User inputs
+age = st.number_input("Age", min_value=1, max_value=100, value=25)
+income = st.number_input("Annual Income (in $1000s)", min_value=1, max_value=200, value=50)
+score = st.number_input("Spending Score (1-100)", min_value=1, max_value=100, value=50)
 
-if submitted:
+# Predict button
+if st.button("Predict Segment"):
     try:
-        age_values = [float(x.strip()) for x in age_list.split(',') if x.strip()]
-        income_values = [float(x.strip()) for x in income_list.split(',') if x.strip()]
-        score_values = [float(x.strip()) for x in score_list.split(',') if x.strip()]
-
-        if not (len(age_values) == len(income_values) == len(score_values)):
-            st.error("The number of Age, Income, and Score values must match.")
-        else:
-            data = pd.DataFrame({
-                'Age': age_values,
-                'Annual Income (k$)': income_values,
-                'Spending Score (1-100)': score_values
-            })
-
-            st.write("Cleaned Data", data)
-
-            data = clean_data(data)
-            inertia = get_elbow_values(data)
-            plot_elbow(inertia)
-
-            k = st.slider("Select number of clusters", 2, 10, 5)
-            labels, model = apply_kmeans(data, k)
-
-            x_feature = st.selectbox("Select X-axis for cluster plot", data.columns)
-            y_feature = st.selectbox("Select Y-axis for cluster plot", data.columns, index=2)
-
-            plot_clusters(data, labels, x_feature, y_feature)
-
+        user_data = np.array([[age, income, score]])
+        prediction = model.predict(user_data)
+        logger.info("Prediction successful: %s", prediction)
+        st.success(f"🎯 You belong to customer segment: {prediction[0]}")
     except Exception as e:
-        st.error(f"Error: {e}")
+        logger.error("Prediction error: %s", e)
+        st.error(f"Prediction failed: {e}")
