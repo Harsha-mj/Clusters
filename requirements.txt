@@ -1,0 +1,8 @@
+# File: requirements.txt
+"""
+pandas
+scikit-learn
+matplotlib
+seaborn
+streamlit
+"""
