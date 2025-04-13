@@ -1,4 +1,4 @@
-# Clusters
+# unsupervised-clustering-Streamlit
 # File: README.md
 # Mall Customer Segmentation (Unsupervised Clustering)
 This app has been built using Streamlit and deployed with Streamlit community cloud
