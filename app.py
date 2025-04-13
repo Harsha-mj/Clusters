@@ -5,6 +5,10 @@ import pandas as pd
 from data_cleaning import clean_data
 from clustering import get_elbow_values, apply_kmeans
 from visualization import plot_elbow, plot_clusters
+import os
+
+# Ensure logs directory exists
+os.makedirs("logs", exist_ok=True)
 
 logging.basicConfig(filename='logs/app.log', level=logging.INFO)
 
