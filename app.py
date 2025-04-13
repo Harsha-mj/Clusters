@@ -2,9 +2,9 @@
 import streamlit as st
 import logging
 import pandas as pd
-from modules.data_cleaning import clean_data
-from modules.clustering import get_elbow_values, apply_kmeans
-from modules.visualization import plot_elbow, plot_clusters
+from data_cleaning import clean_data
+from clustering import get_elbow_values, apply_kmeans
+from visualization import plot_elbow, plot_clusters
 
 logging.basicConfig(filename='logs/app.log', level=logging.INFO)
 
