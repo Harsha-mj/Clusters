@@ -18,7 +18,7 @@ except Exception as e:
     st.stop()
 
 # Streamlit UI
-st.title("🛍️ Mall Customer Segment Predictor")
+st.title("🛍️ Customer Segment Predictor")
 st.markdown("Enter your details to find out which customer segment you belong to based on clustering!")
 
 # User inputs
